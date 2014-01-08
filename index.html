@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>    <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>     <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>     <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Mengenlehreuhr</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="berlin-clock" id="mengenlehreuhr">
+      <div class="second-row row">
+        <div class="sec unit"></div>
+      </div>
+      <div class="hour-top row">
+        <div class="hour unit"></div>
+        <div class="hour unit"></div>
+        <div class="hour unit"></div>
+        <div class="hour unit"></div>
+      </div>
+      <div class="hour-bottom row">
+        <div class="hour unit"></div>
+        <div class="hour unit"></div>
+        <div class="hour unit"></div>
+        <div class="hour unit"></div>
+      </div>
+      <div class="minute-top row">
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+      </div>
+      <div class="minute-bottom row">
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+        <div class="min unit"></div>
+      </div>
+    </div>
+
+    <div class="ctrl" id="ctrl">
+      <div class="input row">
+        hh <input type="text" class="hours">
+        mm <input type="text" class="minutes">
+        ss <input type="text" class="seconds">
+        <button id="set">Set Clock</button>
+      </div>
+      <div class="button row">
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="mengenlehreuhr.js"></script>
+    <script>
+      $(document).ready(function(){
+        var clock = new Mengenlehreuhr('#mengenlehreuhr');
+        var time = null;
+
+        function updateInputs() {
+          var d = new Date()
+          $('#ctrl .input.row .hours').val(d.getHours());
+          $('#ctrl .input.row .minutes').val(d.getMinutes());
+          $('#ctrl .input.row .seconds').val(d.getSeconds());
+        }
+
+        function startInterval() {
+          updateInputs();
+          clock.update();
+          time = setInterval(function() {
+            clock.update();
+            updateInputs();
+          }, 1000);
+        }
+
+        function stopInterval() {
+          clearInterval(time);
+          time = null;
+        }
+
+        $('#start').bind('click', function() {
+          if (time != null) return;
+          startInterval();
+        });
+
+        $('#stop').bind('click', function() {
+          stopInterval();
+        });
+
+        $('#set').bind('click', function() {
+          stopInterval();
+
+          var h = $('#ctrl .input.row .hours').val();
+          var m = $('#ctrl .input.row .minutes').val();
+          var s = $('#ctrl .input.row .seconds').val();
+
+          clock.update(new Date(0, 0, 0, h, m, s));
+
+        });
+
+        updateInputs();
+        startInterval();
+
+      });
+    </script>
+  </body>
+</html>
